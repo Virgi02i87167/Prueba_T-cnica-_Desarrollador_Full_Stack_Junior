@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+  # Servicio para la base de datos 
+  mongodb:
+    image: mongo:6.0
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+
+  # Servicio para la API
+  api:
+    build: .
+    container_name: task-api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - PORT=3000
+      - MONGO_URL=mongodb://mongodb:27017/tasksdb
+    depends_on:
+      - mongodb
+
+volumes:
+  mongodb_data:
